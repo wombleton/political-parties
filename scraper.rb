@@ -18,7 +18,7 @@ page.search(".party-bio-content").each do |p|
 	next if name.empty?
 	party = {
 		'name' => name,
-		'logo' => p.at('.party-logo img').attr('href')
+		'logo' => p.at('.party-logo img').attr('src')
 	}
 	ScraperWiki.save_sqlite(['name'], party)
 	puts "Saved record for #{party['name']}"
