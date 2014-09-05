@@ -17,13 +17,11 @@ page.search(".party-bio-content").each do |p|
 	end
 	next if name.empty?
 	party = {
-		'name' => name
+		'name' => name,
+		'logo' => p.at('.party-logo img').attr('href')
 	}
-	if ((ScraperWiki.select("* from data where `name`='#{party['name']}'").empty?) rescue true)
-		ScraperWiki.save_sqlite(['name'], party)
-	else
-		puts "Skipping already saved record #{party['name']}"
-	end
+	ScraperWiki.save_sqlite(['name'], party)
+	puts "Saved record for #{party['name']}"
 end
 
 # ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software developer"})
