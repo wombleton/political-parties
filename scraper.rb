@@ -1,18 +1,26 @@
 # This is a template for a Ruby scraper on Morph (https://morph.io)
 # including some code snippets below that you should find helpful
 
-# require 'scraperwiki'
-# require 'mechanize'
+require 'scraperwiki'
+require 'mechanize'
 #
-# agent = Mechanize.new
+agent = Mechanize.new
 #
 # # Read in a page
-# page = agent.get("http://foo.com")
+page = agent.get("http://www.elections.org.nz/parties-candidates/registered-political-parties/register-political-parties")
 #
 # # Find somehing on the page using css selectors
-# p page.at('div.content')
-#
-# # Write out to the sqlite database using scraperwiki library
+page.search(".party-bio-content").each do |p|
+	party = {
+		name: p.at("h3:contains('Abbreviation') + p").inner_text || p.at('h2 a').inner_text
+	}
+	if ((ScraperWiki.select("* from data where `name`='#{record['name']}'").empty?) rescue true)
+		ScraperWiki.save_sqlite(['name'], record)
+	else
+		puts "Skipping already saved record #{record['name']}"
+	end
+end
+
 # ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software developer"})
 #
 # # An arbitrary query against the database
