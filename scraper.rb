@@ -11,8 +11,13 @@ page = agent.get("http://www.elections.org.nz/parties-candidates/registered-poli
 #
 # # Find somehing on the page using css selectors
 page.search(".party-bio-content").each do |p|
+	name = p.at("h3:contains('Abbreviation') + p").inner_text
+	if name == 'none'
+		name = p.at('h2 a').inner_text
+	end
+	next if name.empty?
 	party = {
-		'name' => p.at("h3:contains('Abbreviation') + p").inner_text || p.at('h2 a').inner_text
+		'name' => name
 	}
 	if ((ScraperWiki.select("* from data where `name`='#{party['name']}'").empty?) rescue true)
 		ScraperWiki.save_sqlite(['name'], party)
