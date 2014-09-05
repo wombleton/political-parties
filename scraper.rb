@@ -3,6 +3,7 @@
 
 require 'scraperwiki'
 require 'mechanize'
+require 'miro'
 #
 agent = Mechanize.new
 #
@@ -16,9 +17,12 @@ page.search(".party-bio-content").each do |p|
 		name = p.at('h2 a').inner_text
 	end
 	next if name.empty?
+	logo = p.at('.party-logo img').attr('src')
+	colors = Miro::DominantColors.new(logo)
 	party = {
 		'name' => name,
-		'logo' => p.at('.party-logo img').attr('src')
+		'logo' => logo,
+		'hex' => colors.to_hex.first
 	}
 	ScraperWiki.save_sqlite(['name'], party)
 	puts "Saved record for #{party['name']}"
