@@ -14,10 +14,10 @@ page.search(".party-bio-content").each do |p|
 	party = {
 		name: p.at("h3:contains('Abbreviation') + p").inner_text || p.at('h2 a').inner_text
 	}
-	if ((ScraperWiki.select("* from data where `name`='#{record['name']}'").empty?) rescue true)
-		ScraperWiki.save_sqlite(['name'], record)
+	if ((ScraperWiki.select("* from data where `name`='#{party['name']}'").empty?) rescue true)
+		ScraperWiki.save_sqlite(['name'], party)
 	else
-		puts "Skipping already saved record #{record['name']}"
+		puts "Skipping already saved record #{party['name']}"
 	end
 end
 
